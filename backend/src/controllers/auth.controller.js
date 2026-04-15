@@ -36,7 +36,18 @@ async function registerUser(req, res) {
     },
   );
 
-  res.cookie("token", token);
+  // Determine if we're in production (HTTPS)
+  const isProduction =
+    process.env.NODE_ENV === "production" ||
+    req.secure ||
+    req.headers["x-forwarded-proto"] === "https";
+
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
+  });
 
   return res.status(201).json({
     message: "User registered successfully",
@@ -81,10 +92,17 @@ async function loginUser(req, res) {
     },
   );
 
+  // Determine if we're in production (HTTPS)
+  const isProduction =
+    process.env.NODE_ENV === "production" ||
+    req.secure ||
+    req.headers["x-forwarded-proto"] === "https";
+
   res.cookie("token", token, {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
   });
 
   return res.status(200).json({
@@ -115,7 +133,17 @@ async function getMe(req, res) {
 async function logoutUser(req, res) {
   const token = req.cookies.token;
 
-  res.clearCookie("token");
+  // Determine if we're in production (HTTPS)
+  const isProduction =
+    process.env.NODE_ENV === "production" ||
+    req.secure ||
+    req.headers["x-forwarded-proto"] === "https";
+
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+  });
 
   // await blacklistModel.create({
   //   token,
