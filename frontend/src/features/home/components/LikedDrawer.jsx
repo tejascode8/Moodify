@@ -122,8 +122,11 @@ export default function LikedDrawer({ isOpen, onClose }) {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
               {searchQuery && (
-                <button type="button" className="clear-search-btn" onClick={() => setSearchQuery("")}>
-                  ✕
+                <button type="button" className="clear-search-btn" onClick={() => setSearchQuery("")} aria-label="Clear search">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
                 </button>
               )}
             </div>

@@ -142,7 +142,7 @@ export const DEFAULT_SONGS = {
 export const MOOD_DETAILS = {
   happy: {
     label: "Happy & Uplifting",
-    emoji: "☀️",
+    icon: "sun",
     color: "#f59e0b",
     tagline: "Feel-good anthems, vibrant grooves, and infectious energy.",
     description: "Your bright smile was detected! Here is a lively selection of upbeat songs designed to keep your positive momentum rolling.",
@@ -152,7 +152,7 @@ export const MOOD_DETAILS = {
   },
   sad: {
     label: "Melancholy & Deep",
-    emoji: "🌧️",
+    icon: "cloud-rain",
     color: "#0ea5e9",
     tagline: "Gentle chords, emotive melodies, and introspective soundscapes.",
     description: "We sensed deep emotions. Here is a comforting, soulful collection of soothing tracks to accompany your contemplation.",
@@ -162,7 +162,7 @@ export const MOOD_DETAILS = {
   },
   surprised: {
     label: "Energetic & Electric",
-    emoji: "⚡",
+    icon: "zap",
     color: "#ec4899",
     tagline: "High-octane synths, heart-thumping drops, and futuristic beats.",
     description: "Wide eyes and excitement detected! Boost your adrenaline with this electrifying, high-energy playlist.",
@@ -172,7 +172,7 @@ export const MOOD_DETAILS = {
   },
   calm: {
     label: "Calm & Centered",
-    emoji: "🍃",
+    icon: "wind",
     color: "#10b981",
     tagline: "Peaceful acoustic textures, ambient pads, and pure relaxation.",
     description: "Neutral and serene expression recognized. Unwind with peaceful harmonies and meditation-friendly vibes.",

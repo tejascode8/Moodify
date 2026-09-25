@@ -172,7 +172,7 @@ async function updateTheme(req, res) {
     const user = await userModel.findByIdAndUpdate(
       req.user.id,
       { theme },
-      { new: true }
+      { returnDocument: "after" }
     );
 
     if (!user) {

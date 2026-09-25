@@ -403,7 +403,12 @@ export default function Player() {
               <div className="shortcuts-card">
                 <div className="shortcuts-card__header">
                   <span>Player Shortcuts</span>
-                  <button type="button" onClick={() => setShowShortcuts(false)}>✕</button>
+                  <button type="button" onClick={() => setShowShortcuts(false)} aria-label="Close shortcuts">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2">
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </button>
                 </div>
                 <div className="shortcuts-list">
                   <div className="shortcut-row">
