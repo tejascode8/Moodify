@@ -62,12 +62,21 @@ const distPath = possibleDistPaths.find((p) => fs.existsSync(p)) || null;
 
 if (distPath) {
   app.use(express.static(distPath));
-  // Serve frontend index.html for all non-API GET routes
-  app.get(/^(?!\/api).*/, (req, res) => {
+  
+  // Catch-all 404 handler for nonexistent /api endpoints
+  app.use("/api", (req, res) => {
+    return res.status(404).json({
+      status: 404,
+      message: `Cannot ${req.method} ${req.originalUrl}. API route does not exist.`,
+    });
+  });
+
+  // Serve frontend index.html for client-side routing
+  app.get("*", (req, res) => {
     res.sendFile(path.join(distPath, "index.html"));
   });
 } else {
-  // Root route for standalone API server
+  // Root route for standalone API server (when frontend is deployed elsewhere)
   app.get("/", (req, res) => {
     return res.status(200).json({
       status: 200,
