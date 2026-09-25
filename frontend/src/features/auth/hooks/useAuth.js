@@ -1,84 +1,97 @@
-import { login, register, getMe, logout } from "../services/auth.api";
-import { useContext, useEffect } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../auth.context";
+import { login, register, logout } from "../services/auth.api";
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  const { user, setUser, loading, setLoading } = context;
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
 
-  async function handleRegister({ username, email, password }) {
+  const {
+    user,
+    setUser,
+    loading,
+    setLoading,
+    updateThemePreference,
+    isRegistered,
+    openAuthModal,
+    closeAuthModal,
+    requireAuth,
+  } = context;
+  const [authError, setAuthError] = useState(null);
+
+  const handleRegister = async ({ username, email, password }) => {
+    setLoading(true);
+    setAuthError(null);
     try {
-      setLoading(true);
       const data = await register({ username, email, password });
       setUser(data.user);
+      return data.user;
     } catch (error) {
-      console.log(error);
-      setUser(null);
+      const msg = error?.message || "Registration failed. Please check your credentials.";
+      setAuthError(msg);
+      throw new Error(msg);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  async function handleLogin({ username, email, password }) {
+  const handleLogin = async ({ email, password }) => {
+    setLoading(true);
+    setAuthError(null);
     try {
-      setLoading(true);
-      const data = await login({ username, email, password });
+      const data = await login({ email, password });
       setUser(data.user);
+      return data.user;
     } catch (error) {
-      console.log(error);
-      setUser(null);
+      const msg = error?.message || "Invalid email or password";
+      setAuthError(msg);
+      throw new Error(msg);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  async function handleGetMe() {
+  const handleDemoLogin = () => {
+    setLoading(true);
+    const demoUser = {
+      id: "demo-user-123",
+      username: "Guest Explorer",
+      email: "guest@moodify.ai",
+      isDemo: true,
+    };
+    setUser(demoUser);
+    setLoading(false);
+    return demoUser;
+  };
+
+  const handleLogout = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const data = await getMe();
-      setUser(data.user);
-    } catch (error) {
-      setUser(null);
-      // Only log if it's not a 401 "Token not provided" error
-      // Note: auth.api.js throws error?.response?.data, not the full Axios error
-      const errorMessage = error?.message || "";
-      const isTokenNotFoundError =
-        errorMessage === "Token not provided" ||
-        errorMessage.includes("Token not provided") ||
-        (error?.status === 401 && errorMessage === "Token not provided");
-
-      if (!isTokenNotFoundError) {
-        console.log("getMe failed:", errorMessage || error);
-      }
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleLogout() {
-    try {
-      setLoading(true);
       await logout();
-      setUser(null);
     } catch (error) {
-      console.log(error);
+      console.warn("Logout error:", error);
     } finally {
+      setUser(null);
       setLoading(false);
     }
-  }
-
-  useEffect(() => {
-    handleGetMe().catch(() => {
-      setUser(null);
-    });
-  }, []);
+  };
 
   return {
     user,
     loading,
+    authError,
+    setAuthError,
     handleRegister,
     handleLogin,
+    handleDemoLogin,
     handleLogout,
-    handleGetMe,
+    updateThemePreference,
+    isRegistered,
+    openAuthModal,
+    closeAuthModal,
+    requireAuth,
   };
 };
+

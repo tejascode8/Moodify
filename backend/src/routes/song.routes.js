@@ -14,4 +14,6 @@ router.post("/", upload.single("song"), songController.uploadSong);
 
 router.get("/", songController.getSong);
 
+router.delete("/:id", songController.deleteSong);
+
 module.exports = router;

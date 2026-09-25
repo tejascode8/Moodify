@@ -1,11 +1,235 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>moodify</title>
+    <meta name="description" content="Moodify - AI-powered emotion-based music recommendation and streaming platform. Detect your facial expressions and discover soundscapes tailored to your mood." />
+    <meta name="theme-color" content="#000000" />
+    <title>Moodify</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2'><circle cx='12' cy='12' r='9'/><path d='M9 12a3 3 0 1 0 6 0 3 3 0 0 0-6 0Z'/><path d='M12 3v3m0 12v3' stroke-linecap='round'/></svg>" />
+    <!-- GSAP for Smooth Transitions -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <!-- Instant Preloader Styles (Renders before JS/CSS bundle download) -->
+    <style id="app-preloader-css">
+      #app-preloader {
+        position: fixed;
+        inset: 0;
+        z-index: 999999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #000000;
+        color: #f8fafc;
+        font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+      }
+      #app-preloader.fade-out {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      .preloader-glow-ambient {
+        position: absolute;
+        width: 320px;
+        height: 320px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 87, 34, 0.22) 0%, rgba(255, 87, 34, 0.05) 50%, transparent 70%);
+        filter: blur(40px);
+        pointer-events: none;
+        animation: preloaderPulse 3s ease-in-out infinite alternate;
+      }
+      .preloader-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 22px;
+      }
+      .preloader-orb {
+        position: relative;
+        width: 84px;
+        height: 84px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .preloader-orb-ring {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 2.5px solid transparent;
+        border-top-color: #ff5722;
+        border-right-color: rgba(255, 255, 255, 0.25);
+        animation: preloaderSpin 1.1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+      }
+      .preloader-orb-outer {
+        position: absolute;
+        inset: -8px;
+        border-radius: 50%;
+        border: 1.5px dashed rgba(255, 87, 34, 0.4);
+        animation: preloaderSpinReverse 4s linear infinite;
+      }
+      .preloader-orb-core {
+        position: absolute;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: radial-gradient(circle, #ff5722 0%, rgba(255, 87, 34, 0.2) 70%, transparent 100%);
+        filter: blur(6px);
+        animation: preloaderPulse 2s ease-in-out infinite alternate;
+      }
+      .preloader-icon {
+        position: relative;
+        z-index: 3;
+        color: #ffffff;
+      }
+      .preloader-waveform {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        height: 22px;
+      }
+      .preloader-waveform span {
+        width: 3.5px;
+        height: 100%;
+        background: #ff5722;
+        border-radius: 9999px;
+        animation: preloaderWave 1s ease-in-out infinite alternate;
+      }
+      .preloader-waveform span:nth-child(1) { animation-delay: 0.1s; height: 8px; }
+      .preloader-waveform span:nth-child(2) { animation-delay: 0.3s; height: 18px; }
+      .preloader-waveform span:nth-child(3) { animation-delay: 0.5s; height: 22px; }
+      .preloader-waveform span:nth-child(4) { animation-delay: 0.2s; height: 14px; }
+      .preloader-waveform span:nth-child(5) { animation-delay: 0.4s; height: 20px; }
+      .preloader-waveform span:nth-child(6) { animation-delay: 0.15s; height: 10px; }
+
+      .preloader-text-wrap {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .preloader-title {
+        font-size: 1.35rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: #f8fafc;
+        margin: 0;
+      }
+      .preloader-status {
+        font-size: 0.84rem;
+        color: #94a3b8;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        margin: 0;
+      }
+      @keyframes preloaderSpin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      @keyframes preloaderSpinReverse {
+        0% { transform: rotate(360deg); }
+        100% { transform: rotate(0deg); }
+      }
+      @keyframes preloaderPulse {
+        0% { transform: scale(0.88); opacity: 0.6; }
+        100% { transform: scale(1.12); opacity: 0.95; }
+      }
+      @keyframes preloaderWave {
+        0% { transform: scaleY(0.3); opacity: 0.45; }
+        100% { transform: scaleY(1); opacity: 1; }
+      }
+    </style>
+
+    <!-- Early Console Filter and Dismiss Handler -->
+    <script>
+      (function() {
+        var isWasmNoise = function(arg) {
+          if (!arg) return false;
+          var str = typeof arg === 'string' ? arg : (arg.message || String(arg));
+          return (
+            str.indexOf('TensorFlow Lite XNNPACK') !== -1 ||
+            str.indexOf('Created TensorFlow Lite XNNPACK delegate') !== -1 ||
+            str.indexOf('face_landmarker_graph') !== -1 ||
+            str.indexOf('FaceBlendshapesGraph acceleration') !== -1 ||
+            str.indexOf('gl_context') !== -1 ||
+            str.indexOf('inference_feedback_manager') !== -1 ||
+            str.indexOf('Graph successfully started') !== -1 ||
+            str.indexOf('feedback tensors') !== -1
+          );
+        };
+
+        ['log', 'info', 'warn', 'error', 'debug'].forEach(function(method) {
+          var orig = console[method];
+          if (!orig) return;
+          console[method] = function() {
+            for (var i = 0; i < arguments.length; i++) {
+              if (isWasmNoise(arguments[i])) return;
+            }
+            return orig.apply(console, arguments);
+          };
+        });
+
+        try {
+          var savedTheme = localStorage.getItem('moodify_theme') || 'dark';
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        } catch(e) {}
+
+        window.dismissAppPreloader = function() {
+          var el = document.getElementById('app-preloader');
+          if (el) {
+            el.classList.add('fade-out');
+            setTimeout(function() {
+              if (el && el.parentNode) {
+                el.parentNode.removeChild(el);
+              }
+            }, 500);
+          }
+        };
+      })();
+    </script>
   </head>
   <body>
+    <!-- Instant First-Render Preloader -->
+    <div id="app-preloader" role="status" aria-live="polite" aria-label="Loading Moodify">
+      <div class="preloader-glow-ambient"></div>
+      <div class="preloader-content">
+        <div class="preloader-orb">
+          <div class="preloader-orb-ring"></div>
+          <div class="preloader-orb-outer"></div>
+          <div class="preloader-orb-core"></div>
+          <div class="preloader-icon">
+            <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M9 12a3 3 0 1 0 6 0 3 3 0 0 0-6 0Z"></path>
+              <path d="M12 3v3m0 12v3" stroke-linecap="round"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="preloader-waveform" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="preloader-text-wrap">
+          <h2 class="preloader-title">Moodify</h2>
+          <p class="preloader-status">Calibrating emotional soundscapes...</p>
+        </div>
+      </div>
+    </div>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

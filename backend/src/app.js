@@ -39,4 +39,13 @@ app.use("/api/auth", authRoutes);
 
 app.use("/api/songs", songRoutes);
 
+// Catch-all 404 handler for nonexistent API endpoints
+app.use((req, res) => {
+  return res.status(404).json({
+    status: 404,
+    message: `Cannot ${req.method} ${req.originalUrl}. Route does not exist.`,
+  });
+});
+
 module.exports = app;
+

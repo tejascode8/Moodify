@@ -1,16 +1,56 @@
-# React + Vite
+# 🎧 Moodify Frontend Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Next-generation, emotion-responsive web client for real-time facial expression music curation.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ⚡ Key Highlights
 
-## React Compiler
+- **AI Emotion Recognition**: Real-time 468-point facial landmark mesh tracking using MediaPipe Vision.
+- **Pure Obsidian Black Architecture (`#000000`)**: Deep dark mode interface with frosted glass accents and glowing acoustic visualizers.
+- **Guest Explorer Mode**: Unregistered visitors can explore all music and AI camera features seamlessly on their device; changes (liking, uploading, managing library) prompt a lightweight authentication gatekeeper.
+- **Instant Preloader & Global Loader**: 0ms first-frame HTML/CSS preloader + full-page dynamic branded equalizer loader.
+- **Persistent Saved Library**: Instant client-side and cloud-synchronized favorites management.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Framework**: React 19 + Vite
+- **Routing**: React Router v7
+- **Styling**: SCSS with design system tokens and fluid dark/light theming
+- **AI / Computer Vision**: `@mediapipe/tasks-vision`
+- **Animations**: GSAP (GreenSock Animation Platform) + hardware-accelerated CSS keyframes
+- **HTTP Client**: Axios with automatic cookie authentication
+
+---
+
+## 🚀 Getting Started
+
+### 1. Install Dependencies
+```bash
+npm install
+```
+
+### 2. Configure Environment
+Copy `.env.example` to `.env`:
+```bash
+cp .env.example .env
+```
+
+Ensure `VITE_BACKEND_URL` matches your running backend:
+```env
+VITE_BACKEND_URL=http://localhost:3000
+```
+
+### 3. Run Development Server
+```bash
+npm run dev
+```
+
+App will be available at: `http://localhost:5173`
+
+### 4. Build for Production
+```bash
+npm run build
+```

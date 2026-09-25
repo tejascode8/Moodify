@@ -1,18 +1,19 @@
 # Dependencies
 node_modules/
-/.pnp
-.pnp.js
-
-# Production builds
-dist/
-dist-ssr/
-build/
+*/node_modules/
 
 # Environment variables
 .env
 .env.local
 .env.*.local
+*.env
 !.env.example
+!*/.env.example
+
+# Production builds
+dist/
+build/
+*/dist/
 
 # Logs
 logs/
@@ -33,3 +34,10 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+
+# Temporary & cache files
+.cache/
+.eslintcache
+.temp/
+tmp/
+LINKEDIN_PROJECT_POST.md

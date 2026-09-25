@@ -16,6 +16,11 @@ const userSchema = new mongoose.Schema({
     required: [true, "Password is required"],
     select: false,
   },
+  theme: {
+    type: String,
+    enum: ["light", "dark"],
+    default: "light",
+  },
 });
 
 // // 🔐 Hash password before saving

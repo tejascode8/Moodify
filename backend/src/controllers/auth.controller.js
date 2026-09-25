@@ -1,7 +1,6 @@
 const userModel = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const blacklistModel = require("../models/blacklist.model");
 const redis = require("../config/cache");
 
 async function registerUser(req, res) {
@@ -36,7 +35,6 @@ async function registerUser(req, res) {
     },
   );
 
-  // Determine if we're in production (HTTPS)
   const isProduction =
     process.env.NODE_ENV === "production" ||
     req.secure ||
@@ -46,7 +44,7 @@ async function registerUser(req, res) {
     httpOnly: true,
     secure: isProduction,
     sameSite: isProduction ? "none" : "lax",
-    maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
+    maxAge: 3 * 24 * 60 * 60 * 1000,
   });
 
   return res.status(201).json({
@@ -55,6 +53,7 @@ async function registerUser(req, res) {
       id: user._id,
       username: user.username,
       email: user.email,
+      theme: user.theme || "dark",
     },
   });
 }
@@ -67,6 +66,7 @@ async function loginUser(req, res) {
       $or: [{ email }, { username }],
     })
     .select("+password");
+
   if (!user) {
     return res.status(401).json({
       message: "Invalid credentials",
@@ -92,7 +92,6 @@ async function loginUser(req, res) {
     },
   );
 
-  // Determine if we're in production (HTTPS)
   const isProduction =
     process.env.NODE_ENV === "production" ||
     req.secure ||
@@ -102,7 +101,7 @@ async function loginUser(req, res) {
     httpOnly: true,
     secure: isProduction,
     sameSite: isProduction ? "none" : "lax",
-    maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
+    maxAge: 3 * 24 * 60 * 60 * 1000,
   });
 
   return res.status(200).json({
@@ -111,29 +110,97 @@ async function loginUser(req, res) {
       id: user._id,
       username: user.username,
       email: user.email,
+      theme: user.theme || "light",
     },
   });
 }
 
 async function getMe(req, res) {
-  const user = await userModel.findById(req.user.id);
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(200).json({
+        message: "No active session",
+        user: null,
+      });
+    }
 
-  if (!user) {
-    return res.status(404).json({
-      message: "User not found",
+    const isTokenBlacklisted = await redis.get(token);
+    if (isTokenBlacklisted) {
+      return res.status(200).json({
+        message: "Session expired",
+        user: null,
+      });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await userModel.findById(decoded.id);
+
+    if (!user) {
+      return res.status(200).json({
+        message: "User not found",
+        user: null,
+      });
+    }
+
+    return res.status(200).json({
+      message: "User fetched successfully",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        theme: user.theme || "light",
+      },
+    });
+  } catch (err) {
+    return res.status(200).json({
+      message: "Unauthenticated",
+      user: null,
     });
   }
+}
 
-  res.status(200).json({
-    message: "User fetched successfully",
-    user,
-  });
+async function updateTheme(req, res) {
+  try {
+    const { theme } = req.body;
+    if (!["light", "dark"].includes(theme)) {
+      return res.status(400).json({
+        message: "Invalid theme. Must be 'light' or 'dark'.",
+      });
+    }
+
+    const user = await userModel.findByIdAndUpdate(
+      req.user.id,
+      { theme },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Theme updated successfully",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        theme: user.theme || "light",
+      },
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: "Failed to update theme",
+      error: err.message,
+    });
+  }
 }
 
 async function logoutUser(req, res) {
   const token = req.cookies.token;
 
-  // Determine if we're in production (HTTPS)
   const isProduction =
     process.env.NODE_ENV === "production" ||
     req.secure ||
@@ -145,15 +212,13 @@ async function logoutUser(req, res) {
     sameSite: isProduction ? "none" : "lax",
   });
 
-  // await blacklistModel.create({
-  //   token,
-  // });
-
-  await redis.set(token, Date.now().toString(), "EX", 60 * 60);
+  if (token) {
+    await redis.set(token, Date.now().toString(), "EX", 60 * 60);
+  }
 
   res.status(200).json({
     message: "logout successfully",
   });
 }
 
-module.exports = { registerUser, loginUser, getMe, logoutUser };
+module.exports = { registerUser, loginUser, getMe, updateTheme, logoutUser };

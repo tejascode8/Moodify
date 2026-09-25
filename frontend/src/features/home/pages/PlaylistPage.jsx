@@ -1,24 +1,19 @@
-import { useEffect, useState } from "react";
-import { getSong } from "../service/song.api";
+import React from "react";
+import Navbar from "../../shared/components/Navbar";
 import Playlist from "../components/Playlist";
-import MusicPlayer from "../components/MusicPlayer";
-import FaceExpression from "../../expressions/components/FaceExpression";
+import Player from "../components/player";
+import { useSong } from "../hooks/useSong";
 
 export default function PlaylistPage() {
-  const [songs, setSongs] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    getSong("happy").then((data) => {
-      setSongs(data.songs);
-    });
-  }, []);
+  const { playlist, changeMood } = useSong();
 
   return (
-    <div>
-      <Playlist songs={songs} playSong={setCurrentIndex} />
-
-      <MusicPlayer song={songs[currentIndex]} />
+    <div className="home-container">
+      <Navbar />
+      <main className="home-main">
+        <Playlist songs={playlist} onSelectMood={(mood) => changeMood(mood, false)} />
+      </main>
+      <Player />
     </div>
   );
 }

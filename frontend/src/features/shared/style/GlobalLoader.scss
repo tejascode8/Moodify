@@ -1,0 +1,148 @@
+.global-loader-container {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000 !important;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: 99999;
+  transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.45s cubic-bezier(0.4, 0, 0.2, 1), transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.02);
+    pointer-events: none;
+  }
+}
+
+.global-loader-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  animation: loaderFadeIn 0.4s ease-out;
+}
+
+/* Glowing Holographic Brand Orb */
+.loader-brand-orb {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .orb-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: var(--accent-color);
+    border-right-color: rgba(255, 255, 255, 0.2);
+    animation: orbSpin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  }
+
+  .orb-ring-outer {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 1.5px dashed var(--accent-border);
+    opacity: 0.6;
+    animation: orbSpinReverse 3.5s linear infinite;
+  }
+
+  .orb-glow-core {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-color) 0%, rgba(255, 87, 34, 0.15) 70%, transparent 100%);
+    filter: blur(8px);
+    animation: orbPulse 2s ease-in-out infinite alternate;
+  }
+
+  .orb-icon {
+    position: relative;
+    z-index: 2;
+    color: #ffffff;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+  }
+}
+
+/* Audio Visualizer Waveform */
+.loader-waveform {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 24px;
+
+  span {
+    width: 3.5px;
+    height: 100%;
+    background: var(--accent-color);
+    border-radius: var(--radius-pill);
+    animation: waveJump 1s ease-in-out infinite alternate;
+
+    &:nth-child(1) { animation-delay: 0.1s; height: 8px; }
+    &:nth-child(2) { animation-delay: 0.3s; height: 18px; }
+    &:nth-child(3) { animation-delay: 0.5s; height: 24px; }
+    &:nth-child(4) { animation-delay: 0.2s; height: 14px; }
+    &:nth-child(5) { animation-delay: 0.4s; height: 20px; }
+    &:nth-child(6) { animation-delay: 0.15s; height: 10px; }
+  }
+}
+
+/* Text & Status */
+.loader-text-wrap {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  .loader-brand-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+
+  .loader-status-msg {
+    font-size: 0.84rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+}
+
+@keyframes orbSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes orbSpinReverse {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes orbPulse {
+  0% { transform: scale(0.85); opacity: 0.5; }
+  100% { transform: scale(1.15); opacity: 0.9; }
+}
+
+@keyframes waveJump {
+  0% { transform: scaleY(0.3); opacity: 0.5; }
+  100% { transform: scaleY(1); opacity: 1; }
+}
+
+@keyframes loaderFadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}

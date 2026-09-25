@@ -1,32 +1,661 @@
-@use "./button.scss";
+/* ==========================================================================
+   Moodify - Senior UI/UX Clean Ambient Mesh Background Design System
+   ========================================================================== */
 
-* {
-  margin: 0%;
-  padding: 0%;
+:root {
+  /* Light Mode Palette */
+  --bg-app: #f6f8fb;
+  --bg-surface: rgba(255, 255, 255, 0.85);
+  --bg-surface-solid: #ffffff;
+  --bg-surface-elevated: rgba(241, 245, 249, 0.7);
+  --bg-surface-hover: rgba(226, 232, 240, 0.6);
+  --bg-input: rgba(255, 255, 255, 0.9);
+
+  --border-default: rgba(226, 232, 240, 0.85);
+  --border-subtle: rgba(241, 245, 249, 0.6);
+  --border-focus: #94a3b8;
+  --glass-border: rgba(255, 255, 255, 0.7);
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  --text-muted: #94a3b8;
+
+  /* Default Mood Theme (Indigo / Flow) */
+  --accent-color: #4f46e5;
+  --accent-light: #6366f1;
+  --accent-surface: rgba(238, 242, 255, 0.85);
+  --accent-border: rgba(199, 210, 254, 0.9);
+  
+  /* Dynamic Ambient Background Mesh Aura (Light Mode) */
+  --aura-color-1: rgba(99, 102, 241, 0.12);
+  --aura-color-2: rgba(147, 51, 234, 0.08);
+  --aura-color-3: rgba(59, 130, 246, 0.08);
+
+  --font-family-display: "Outfit", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-family-body: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-family-mono: "JetBrains Mono", monospace;
+
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 30px;
+  --radius-pill: 9999px;
+
+  --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
+  --shadow-card-hover: 0 12px 30px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
+  --shadow-dropdown: 0 16px 36px -6px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.06);
+  --shadow-player: 0 -4px 24px -2px rgba(15, 23, 42, 0.06);
+
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Dark Mode Palette - Pure Obsidian Black Architecture */
+[data-theme="dark"] {
+  --bg-app: #000000;
+  --bg-surface: rgba(8, 8, 8, 0.85);
+  --bg-surface-solid: #0a0a0a;
+  --bg-surface-elevated: rgba(18, 18, 18, 0.8);
+  --bg-surface-hover: rgba(30, 30, 30, 0.85);
+  --bg-input: #0c0c0c;
+
+  --border-default: rgba(255, 255, 255, 0.09);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-focus: rgba(255, 255, 255, 0.35);
+  --glass-border: rgba(255, 255, 255, 0.12);
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-muted: #475569;
+
+  --aura-color-1: rgba(99, 102, 241, 0.2);
+  --aura-color-2: rgba(147, 51, 234, 0.14);
+  --aura-color-3: rgba(59, 130, 246, 0.14);
+
+  --shadow-card: 0 8px 32px -4px rgba(0, 0, 0, 0.75), 0 2px 8px -2px rgba(0, 0, 0, 0.5);
+  --shadow-card-hover: 0 16px 44px -4px rgba(0, 0, 0, 0.85), 0 4px 12px -2px rgba(0, 0, 0, 0.6);
+  --shadow-dropdown: 0 20px 48px rgba(0, 0, 0, 0.95), 0 0 1px rgba(255, 255, 255, 0.15);
+  --shadow-player: 0 -8px 36px rgba(0, 0, 0, 0.9);
+}
+
+/* Mood-specific Accents & Ambient Aura Gradients */
+[data-mood="happy"] {
+  --accent-color: #d97706;
+  --accent-light: #f59e0b;
+  --accent-surface: rgba(254, 243, 199, 0.85);
+  --accent-border: rgba(253, 230, 138, 0.9);
+  --aura-color-1: rgba(245, 158, 11, 0.14);
+  --aura-color-2: rgba(234, 88, 12, 0.09);
+  --aura-color-3: rgba(251, 191, 36, 0.1);
+}
+
+[data-theme="dark"][data-mood="happy"] {
+  --accent-color: #f59e0b;
+  --accent-light: #fbbf24;
+  --accent-surface: rgba(245, 158, 11, 0.14);
+  --accent-border: rgba(245, 158, 11, 0.32);
+  --aura-color-1: rgba(245, 158, 11, 0.22);
+  --aura-color-2: rgba(234, 88, 12, 0.14);
+  --aura-color-3: rgba(251, 191, 36, 0.15);
+}
+
+[data-mood="sad"] {
+  --accent-color: #0284c7;
+  --accent-light: #0ea5e9;
+  --accent-surface: rgba(224, 242, 254, 0.85);
+  --accent-border: rgba(186, 230, 253, 0.9);
+  --aura-color-1: rgba(14, 165, 233, 0.14);
+  --aura-color-2: rgba(99, 102, 241, 0.09);
+  --aura-color-3: rgba(56, 189, 248, 0.1);
+}
+
+[data-theme="dark"][data-mood="sad"] {
+  --accent-color: #0ea5e9;
+  --accent-light: #38bdf8;
+  --accent-surface: rgba(14, 165, 233, 0.14);
+  --accent-border: rgba(14, 165, 233, 0.32);
+  --aura-color-1: rgba(14, 165, 233, 0.22);
+  --aura-color-2: rgba(99, 102, 241, 0.14);
+  --aura-color-3: rgba(56, 189, 248, 0.15);
+}
+
+[data-mood="surprised"] {
+  --accent-color: #db2777;
+  --accent-light: #ec4899;
+  --accent-surface: rgba(252, 231, 243, 0.85);
+  --accent-border: rgba(251, 207, 232, 0.9);
+  --aura-color-1: rgba(236, 72, 153, 0.14);
+  --aura-color-2: rgba(168, 85, 247, 0.09);
+  --aura-color-3: rgba(244, 114, 182, 0.1);
+}
+
+[data-theme="dark"][data-mood="surprised"] {
+  --accent-color: #ec4899;
+  --accent-light: #f472b6;
+  --accent-surface: rgba(236, 72, 153, 0.14);
+  --accent-border: rgba(236, 72, 153, 0.32);
+  --aura-color-1: rgba(236, 72, 153, 0.22);
+  --aura-color-2: rgba(168, 85, 247, 0.14);
+  --aura-color-3: rgba(244, 114, 182, 0.15);
+}
+
+[data-mood="calm"], [data-mood="neutral"] {
+  --accent-color: #059669;
+  --accent-light: #10b981;
+  --accent-surface: rgba(209, 250, 229, 0.85);
+  --accent-border: rgba(167, 243, 208, 0.9);
+  --aura-color-1: rgba(16, 185, 129, 0.14);
+  --aura-color-2: rgba(20, 184, 166, 0.09);
+  --aura-color-3: rgba(52, 211, 153, 0.1);
+}
+
+[data-theme="dark"][data-mood="calm"], [data-theme="dark"][data-mood="neutral"] {
+  --accent-color: #10b981;
+  --accent-light: #34d399;
+  --accent-surface: rgba(16, 185, 129, 0.14);
+  --accent-border: rgba(16, 185, 129, 0.32);
+  --aura-color-1: rgba(16, 185, 129, 0.22);
+  --aura-color-2: rgba(20, 184, 166, 0.14);
+  --aura-color-3: rgba(52, 211, 153, 0.15);
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
-html,
-body,
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  transition: background-color 0.45s cubic-bezier(0.16, 1, 0.3, 1), color 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-family-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  overflow-x: hidden;
+  position: relative;
+  transition: background-color 0.45s cubic-bezier(0.16, 1, 0.3, 1), color 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Universal Smooth Theme Transition Elements */
+#root,
+.card,
+.site-header,
+.bottom-player,
+.playlist-container,
+.camera-section,
+.library-drawer,
+.upload-dialog,
+.btn,
+.pill,
+.auth-box,
+.speed-dropdown,
+.shortcuts-card,
+.user-dropdown-menu,
+.playlist-search-input,
+.emotion-breakdown-list,
+.acoustic-insight-card,
+.bar-bg,
+.timeline-track,
+.file-dropzone,
+.video-wrapper,
+.camera-hud-badge,
+.track-item,
+.track-artwork,
+.mood-pill-group,
+.pill-btn,
+.manual-vibe-bar,
+.vibe-btn {
+  transition: 
+    background-color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Smooth SVG Path & Typography Transitions */
+svg, path, circle, rect, line, polyline {
+  transition: fill 0.35s ease, stroke 0.35s ease, opacity 0.35s ease;
+}
+
+h1, h2, h3, h4, h5, h6, p, span, label, kbd, input {
+  transition: color 0.45s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Dynamic Ambient Background Aura & Floating Glass Elements */
+.ambient-background {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  opacity: 0.95;
+  transition: opacity var(--transition-normal);
+
+  /* Upper Page Hero Spotlight Beam */
+  .hero-aura-spotlight {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 900px;
+    height: 420px;
+    background: radial-gradient(ellipse 65% 55% at 50% 0%, var(--aura-color-1) 0%, transparent 75%);
+    filter: blur(50px);
+    opacity: 0.9;
+    pointer-events: none;
+    transition: background var(--transition-normal);
+  }
+
+  .ambient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(95px);
+    opacity: 0.7;
+    will-change: transform;
+    animation: ambientFloat 18s ease-in-out infinite alternate;
+
+    &--1 {
+      top: -10%;
+      left: 15%;
+      width: 550px;
+      height: 550px;
+      background: var(--aura-color-1);
+      animation-duration: 22s;
+    }
+
+    &--2 {
+      top: 30%;
+      right: -5%;
+      width: 600px;
+      height: 600px;
+      background: var(--aura-color-2);
+      animation-duration: 26s;
+      animation-delay: -5s;
+    }
+
+    &--3 {
+      bottom: -10%;
+      left: 25%;
+      width: 500px;
+      height: 500px;
+      background: var(--aura-color-3);
+      animation-duration: 20s;
+      animation-delay: -10s;
+    }
+  }
+
+  /* Floating Geometric & Glass Elements */
+  .floating-shape {
+    position: absolute;
+    pointer-events: none;
+    will-change: transform;
+    transition: border-color var(--transition-normal), background var(--transition-normal), opacity var(--transition-normal);
+  }
+
+  /* Floating Specular Glass Rings */
+  .float-ring {
+    border-radius: 50%;
+
+    &--1 {
+      top: 14%;
+      right: 9%;
+      width: 130px;
+      height: 130px;
+      border: 1.5px solid var(--accent-border);
+      opacity: 0.45;
+      animation: floatSlow 17s ease-in-out infinite alternate;
+    }
+
+    &--2 {
+      top: 52%;
+      left: 4%;
+      width: 170px;
+      height: 170px;
+      border: 1px dashed var(--accent-border);
+      opacity: 0.35;
+      animation: floatReverse 23s ease-in-out infinite alternate;
+    }
+  }
+
+  /* Floating Translucent Glass Discs */
+  .float-disc {
+    border-radius: 50%;
+    background: var(--accent-surface);
+    border: 1px solid var(--accent-border);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    &--1 {
+      top: 26%;
+      left: 7%;
+      width: 58px;
+      height: 58px;
+      opacity: 0.55;
+      animation: floatDrift 19s ease-in-out infinite alternate;
+    }
+
+    &--2 {
+      bottom: 20%;
+      right: 7%;
+      width: 84px;
+      height: 84px;
+      opacity: 0.45;
+      animation: floatSlow 24s ease-in-out infinite alternate;
+      animation-delay: -6s;
+    }
+  }
+
+  /* Floating Minimal Glass Vibe Capsules */
+  .float-pill {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 14px;
+    border-radius: var(--radius-pill);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: var(--shadow-card);
+    opacity: 0.65;
+
+    &__dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      box-shadow: 0 0 6px var(--accent-color);
+      transition: background var(--transition-normal);
+    }
+
+    &__line {
+      width: 26px;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--border-default);
+    }
+
+    &--1 {
+      top: 16%;
+      left: 16%;
+      animation: floatDrift 21s ease-in-out infinite alternate;
+      animation-delay: -3s;
+
+      @media (max-width: 900px) {
+        display: none;
+      }
+    }
+
+    &--2 {
+      top: 68%;
+      right: 12%;
+      animation: floatReverse 25s ease-in-out infinite alternate;
+      animation-delay: -9s;
+
+      @media (max-width: 900px) {
+        display: none;
+      }
+    }
+  }
+
+  /* Subtle mesh grid overlay for modern tactile texture */
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(0, 0, 0, 0.025) 1px, transparent 1px);
+    background-size: 24px 24px;
+    opacity: 0.6;
+  }
+}
+
+[data-theme="dark"] .ambient-background::after {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
 #root {
-  width: 100%;
-  background-color: rgb(33, 33, 33);
-  color: whitesmoke;
-  font-family:
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    "Open Sans",
-    "Helvetica Neue",
-    sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
 }
 
 a {
-  color: #dd4200;
+  color: inherit;
   text-decoration: none;
+}
+
+/* Glassmorphic Card & Section Div Background */
+.card {
+  position: relative;
+  background: var(--bg-surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  transition: border-color var(--transition-normal), box-shadow var(--transition-normal), transform var(--transition-normal), background var(--transition-normal);
+  overflow: hidden;
+
+  /* Subtle top specular sheen */
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
+    pointer-events: none;
+  }
+
+  /* Ambient card interior glow on top corner */
+  &::after {
+    content: "";
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: var(--aura-color-1);
+    filter: blur(45px);
+    opacity: 0.5;
+    pointer-events: none;
+    transition: background var(--transition-normal);
+  }
+}
+
+.card:hover {
+  border-color: var(--accent-border);
+  box-shadow: var(--shadow-card-hover);
+}
+
+@keyframes ambientFloat {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(40px, 30px) scale(1.08);
+  }
+  100% {
+    transform: translate(-30px, -20px) scale(0.95);
+  }
+}
+
+@keyframes floatSlow {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-24px) rotate(6deg);
+  }
+  100% {
+    transform: translateY(12px) rotate(-4deg);
+  }
+}
+
+@keyframes floatReverse {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(28px) rotate(-8deg);
+  }
+  100% {
+    transform: translateY(-16px) rotate(5deg);
+  }
+}
+
+@keyframes floatDrift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(18px, -20px) scale(1.05);
+  }
+  100% {
+    transform: translate(-14px, 16px) scale(0.95);
+  }
+}
+
+/* Button System */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 18px;
+  font-family: var(--font-family-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  outline: none;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn--primary {
+  background: var(--text-primary);
+  color: var(--bg-app);
+  font-weight: 600;
+}
+
+.btn--primary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+
+.btn--secondary {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+
+.btn--secondary:hover {
+  background: var(--bg-surface-elevated);
+  border-color: var(--accent-border);
+}
+
+.btn--accent {
+  background: var(--accent-color);
+  color: #ffffff;
+}
+
+.btn--accent:hover {
+  background: var(--accent-light);
+  transform: translateY(-1px);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.btn--ghost:hover {
+  background: var(--bg-surface-hover);
+  color: var(--text-primary);
+}
+
+.btn--icon {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+}
+
+.btn--icon:hover {
+  background: var(--bg-surface-hover);
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Pill Badge */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--bg-surface-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-default);
+}
+
+.pill--accent {
+  background: var(--accent-surface);
+  color: var(--accent-color);
+  border-color: var(--accent-border);
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
 }

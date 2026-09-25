@@ -1,440 +1,214 @@
-# Moodify - Emotion-Based Music Recommendation System
+# 🎵 Moodify - AI-Powered Emotion-Responsive Music Streaming Platform
 
-## 📋 Project Overview
+<div align="center">
 
-**Moodify** is an innovative web application that uses facial expression detection to recommend personalized music based on your current emotional state. The application captures your facial expressions via webcam, analyzes them using computer vision, and suggests songs that match your detected mood.
+![Moodify Logo](https://img.shields.io/badge/Moodify-AI%20Music%20Platform-ff5722?style=for-the-badge&logo=music)
+![React 19](https://img.shields.io/badge/React-19-61dafb?style=for-the-badge&logo=react)
+![Node.js](https://img.shields.io/badge/Node.js-v18+-339933?style=for-the-badge&logo=node.js)
+![Express 5](https://img.shields.io/badge/Express-v5-000000?style=for-the-badge&logo=express)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47a248?style=for-the-badge&logo=mongodb)
+![Redis](https://img.shields.io/badge/Redis-Cloud-dc382d?style=for-the-badge&logo=redis)
 
-### Purpose & Problem Solved
+**Experience sound calibrated to your soul.** Real-time facial expression analysis to curate soundtracks matching your emotional state.
 
-- **Problem**: Finding music that matches your current emotional state can be time-consuming and subjective.
-- **Solution**: Moodify automatically detects your facial expression and recommends music that aligns with your mood, creating a personalized listening experience.
-- **Target Users**: Music enthusiasts, people looking for mood-based playlists, developers interested in emotion recognition technology.
+</div>
+
+---
+
+## 📋 Table of Contents
+
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [Tech Stack](#-tech-stack)
+- [Architecture & Project Structure](#-architecture--project-structure)
+- [Getting Started](#-getting-started)
+- [Environment Configuration](#-environment-configuration)
+- [API Endpoints](#-api-endpoints)
+- [Security & Authentication](#-security--authentication)
+- [License](#-license)
+
+---
+
+## 📋 Overview
+
+**Moodify** is a full-stack, AI-driven web application that combines computer vision with intelligent audio curation. By analyzing facial micro-expressions via your webcam using Google's **MediaPipe Vision**, Moodify detects your real-time emotion (Joy, Serenity/Calm, Energy/Surprise, Melancholy/Sadness) and instantaneously calibrates matching audio soundscapes.
+
+### 🌟 What Makes Moodify Unique?
+- **Zero-Friction Guest Explorer**: Anyone can open the app, test the AI camera, and listen to music instantly without an account. Liking, uploading, or custom library management triggers a seamless authentication modal.
+- **Pure Obsidian Black Dark Mode (`#000000`)**: Hardware-accelerated frosted glass refraction and customizable light/dark theme preference persisted in both cloud database and localStorage.
+- **Hardware-Accelerated Visual Equalizers**: Dual audio waveforms, ambient stardust mesh particles, and synchronized beat frequencies.
+- **Instant Preloader & Branded Global Loader**: Zero-delay 0ms HTML preloader with smooth transition to React hydration.
+
+---
 
 ## ✨ Key Features
 
-- **Real-time Facial Expression Detection**: Uses MediaPipe Face Landmarker to detect emotions from webcam feed
-- **Mood-Based Music Recommendations**: Suggests songs based on detected emotional state (happy, sad, neutral, surprised, etc.)
-- **User Authentication**: Secure registration and login system with JWT tokens
-- **Music Player**: Built-in audio player with play/pause, volume control, and playlist management
-- **Song Upload & Management**: Users can upload their own songs with metadata extraction
-- **Redis Caching**: Fast response times with Redis caching for frequently accessed data
-- **Responsive Design**: Modern UI with SCSS styling that works across devices
+- **⚡ Real-Time AI Facial Recognition**: 468-point 3D facial landmark mesh tracking using `@mediapipe/tasks-vision`.
+- **🎼 Emotion-Curated Soundtracks**: Instant playback tailored to Happy, Calm, Surprised, and Sad moods.
+- **🛡️ Secure JWT Authentication**: HTTP-only, SameSite cookies with Redis session blacklisting and bcrypt password hashing.
+- **🎧 High-Fidelity Audio Player**: Custom scrubber bar, volume control, repeat modes (`off`, `all`, `one`), shuffle, and playback speed controller.
+- **📂 MP3 Track Uploads**: Multipart upload pipeline with automatic ID3 tag extraction and ImageKit CDN hosting.
+- **💖 Persistent Saved Library**: Instant client-side and cloud-synchronized favorites management.
+- **🚫 404 Route Protection**: Global catch-all route guard directing users back to safe navigation.
 
-### Advanced Capabilities
-
-- **Computer Vision Integration**: Leverages Google's MediaPipe library for accurate facial landmark detection
-- **MP3 Metadata Extraction**: Automatically extracts ID3 tags from uploaded audio files
-- **Cloud Storage Integration**: Uses ImageKit for efficient media storage and delivery
-- **Real-time Emotion Analysis**: Continuous facial expression monitoring with instant feedback
+---
 
 ## 🛠️ Tech Stack
 
 ### Frontend
-
-- **React 19** - UI library for building interactive interfaces
-- **Vite** - Fast build tool and development server
-- **React Router v7** - Client-side routing
-- **Axios** - HTTP client for API requests
-- **MediaPipe Tasks Vision** - Facial landmark detection and emotion analysis
-- **Sass/SCSS** - CSS preprocessor for styling
+- **React 19** & **Vite**
+- **React Router v7**
+- **MediaPipe Tasks Vision** (`@mediapipe/tasks-vision`)
+- **SCSS / SASS** with CSS custom property design system
+- **GSAP** (GreenSock Animation Platform)
+- **Axios** with automatic credential handling
 
 ### Backend
+- **Node.js** & **Express.js (v5)**
+- **MongoDB** with Mongoose ORM
+- **Redis** (`ioredis`) with resilient in-memory fallback
+- **JWT (`jsonwebtoken`)** & **bcryptjs**
+- **Multer** & **node-id3**
+- **ImageKit** Cloud Storage SDK
 
-- **Node.js** - JavaScript runtime environment
-- **Express.js** - Web application framework
-- **MongoDB with Mongoose** - NoSQL database for data persistence
-- **Redis with ioredis** - In-memory data store for caching
-- **JWT (jsonwebtoken)** - Authentication token management
-- **bcryptjs** - Password hashing
+---
 
-### File Processing & Storage
-
-- **Multer** - Middleware for handling multipart/form-data (file uploads)
-- **node-id3** - ID3 tag reading/writing for MP3 files
-- **ImageKit** - Cloud-based image and file storage with CDN
-
-### Development Tools
-
-- **ESLint** - Code linting and quality assurance
-- **Nodemon** - Automatic server restart during development
-
-## 📦 Dependencies
-
-### Backend Dependencies (`backend/package.json`)
-
-```json
-{
-  "@imagekit/nodejs": "^7.3.0",
-  "bcryptjs": "^3.0.3",
-  "cookie-parser": "^1.4.7",
-  "cors": "^2.8.6",
-  "dotenv": "^17.3.1",
-  "express": "^5.2.1",
-  "ioredis": "^5.10.0",
-  "jsonwebtoken": "^9.0.3",
-  "mongoose": "^9.2.3",
-  "multer": "^2.1.1",
-  "node-id3": "^0.2.9"
-}
-```
-
-### Frontend Dependencies (`frontend/package.json`)
-
-```json
-{
-  "@mediapipe/tasks-vision": "^0.10.32",
-  "axios": "^1.13.6",
-  "react": "^19.2.0",
-  "react-dom": "^19.2.0",
-  "react-router": "^7.13.1",
-  "react-router-dom": "^7.13.1",
-  "sass": "^1.97.3"
-}
-```
-
-### Frontend Dev Dependencies
-
-```json
-{
-  "@eslint/js": "^9.39.1",
-  "@types/react": "^19.2.7",
-  "@types/react-dom": "^19.2.3",
-  "@vitejs/plugin-react": "^5.1.1",
-  "eslint": "^9.39.1",
-  "eslint-plugin-react-hooks": "^7.0.1",
-  "eslint-plugin-react-refresh": "^0.4.24",
-  "globals": "^16.5.0",
-  "vite": "^7.3.1"
-}
-```
-
-## 📁 Project Structure
+## 📁 Architecture & Project Structure
 
 ```
 Moodify/
 ├── backend/
-│   ├── .env                    # Environment variables
-│   ├── package.json           # Backend dependencies
-│   ├── server.js              # Entry point for backend server
+│   ├── .env.example            # Backend environment template
+│   ├── package.json            # Backend dependencies & scripts
+│   ├── server.js               # HTTP server entry point
 │   └── src/
-│       ├── app.js             # Express app configuration
+│       ├── app.js              # Express app setup & CORS policy
 │       ├── config/
-│       │   ├── cache.js       # Redis configuration
-│       │   └── database.js    # MongoDB connection
+│       │   ├── cache.js        # Redis connection & fallback cache
+│       │   └── database.js     # MongoDB connection
 │       ├── controllers/
-│       │   ├── auth.controller.js
-│       │   └── song.controller.js
+│       │   ├── auth.controller.js  # Auth handlers (register, login, getMe, theme)
+│       │   └── song.controller.js  # Track handlers (upload, get, delete)
 │       ├── middlewares/
-│       │   ├── auth.middleware.js
-│       │   └── upload.middleware.js
+│       │   ├── auth.middleware.js  # JWT verification middleware
+│       │   └── upload.middleware.js# Multer memory storage
 │       ├── models/
-│       │   ├── blacklist.model.js
-│       │   ├── song.model.js
-│       │   └── user.model.js
+│       │   ├── song.model.js   # Soundtrack schema
+│       │   └── user.model.js   # User account & theme schema
 │       ├── routes/
 │       │   ├── auth.routes.js
 │       │   └── song.routes.js
 │       └── services/
-│           └── storage.service.js
-└── frontend/
-    ├── index.html            # Main HTML entry point
-    ├── package.json          # Frontend dependencies
-    ├── vite.config.js        # Vite configuration
-    └── src/
-        ├── App.jsx           # Root React component
-        ├── app.routes.jsx    # Application routing
-        ├── main.jsx          # React entry point
-        └── features/
-            ├── auth/         # Authentication feature
-            │   ├── auth.context.jsx
-            │   ├── components/
-            │   ├── hooks/
-            │   ├── pages/
-            │   ├── services/
-            │   └── authStyle/
-            ├── expressions/  # Facial expression detection
-            │   ├── components/FaceExpression.jsx
-            │   ├── style/
-            │   └── utils/utils.js
-            ├── home/         # Music player & playlist
-            │   ├── components/
-            │   ├── hooks/
-            │   ├── pages/
-            │   ├── service/
-            │   └── style/
-            └── shared/       # Shared components & styles
-                └── style/
+│           └── storage.service.js # ImageKit upload service
+│
+├── frontend/
+│   ├── index.html              # HTML entry with instant 0ms preloader
+│   ├── package.json            # Frontend dependencies & scripts
+│   ├── vite.config.js          # Vite configuration
+│   └── src/
+│       ├── App.jsx             # Top-level global loader gatekeeper
+│       ├── app.routes.jsx      # Client-side router configuration
+│       ├── main.jsx            # React root mount
+│       └── features/
+│           ├── auth/           # Authentication state & modals
+│           │   ├── auth.context.jsx
+│           │   ├── authStyle/
+│           │   ├── components/ # AuthModal, Protected, FormGroup
+│           │   ├── hooks/      # useAuth
+│           │   ├── pages/      # Login, Register
+│           │   └── services/   # auth.api.js
+│           ├── expressions/    # MediaPipe camera & emotion HUD
+│           │   ├── components/ # FaceExpression.jsx
+│           │   ├── style/
+│           │   └── utils/      # Vision model pipeline
+│           ├── home/           # Main player & curated soundscapes
+│           │   ├── components/ # Playlist, Player, UploadModal, LikedDrawer
+│           │   ├── data/       # Default curated library
+│           │   ├── hooks/      # useSong
+│           │   ├── pages/      # Home.jsx
+│           │   ├── service/    # SongContext.jsx, song.api.js
+│           │   └── style/
+│           └── shared/         # Reusable global design system
+│               ├── components/ # Navbar, GlobalLoader, MoodAtmosphere
+│               ├── pages/      # NotFound.jsx (404)
+│               ├── style/      # global.scss, Navbar.scss, GlobalLoader.scss
+│               └── utils/      # gsapAnimations.js
 ```
-
-### Key Directories Explained
-
-- **`backend/src/controllers/`**: Contains business logic for handling API requests
-- **`backend/src/models/`**: MongoDB schema definitions using Mongoose
-- **`frontend/src/features/`**: Feature-based organization following clean architecture
-- **`frontend/src/features/expressions/`**: Facial expression detection using MediaPipe
-- **`frontend/src/features/home/`**: Music player, playlist, and song management
-
-## 🚀 Installation Guide
-
-### Prerequisites
-
-- **Node.js** (v18 or higher)
-- **npm** or **yarn** package manager
-- **MongoDB** database (local or Atlas)
-- **Redis** instance (local or cloud)
-- **Webcam** for facial expression detection
-
-### Step-by-Step Setup
-
-1. **Clone the repository**
-
-   ```bash
-   git clone <repository-url>
-   cd Moodify
-   ```
-
-2. **Backend Setup**
-
-   ```bash
-   cd backend
-   npm install
-   ```
-
-3. **Frontend Setup**
-
-   ```bash
-   cd ../frontend
-   npm install
-   ```
-
-4. **Environment Configuration**
-   Create a `.env` file in the `backend` directory with the following variables:
-
-   ```env
-   MONGO_URI=your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret_key
-   REDIS_HOST=your_redis_host
-   REDIS_PORT=your_redis_port
-   REDIS_PASSWORD=your_redis_password
-   IMAGEKIT_PRIVATE_KEY=your_imagekit_private_key
-   ```
-
-5. **Start the Development Servers**
-
-   **Terminal 1 - Backend:**
-
-   ```bash
-   cd backend
-   npm run dev
-   ```
-
-   Server will run on `http://localhost:3000`
-
-   **Terminal 2 - Frontend:**
-
-   ```bash
-   cd frontend
-   npm run dev
-   ```
-
-   Application will run on `http://localhost:5173`
-
-## 🎮 Usage
-
-1. **Access the Application**: Open `http://localhost:5173` in your browser
-2. **Register/Login**: Create an account or login with existing credentials
-3. **Allow Camera Access**: Grant permission for webcam access when prompted
-4. **Detect Expression**: Click "Detect expression" button to analyze your facial expression
-5. **Get Music Recommendations**: Based on your detected mood, songs will be recommended
-6. **Play Music**: Use the built-in music player to listen to recommended tracks
-7. **Upload Songs**: Navigate to upload section to add your own music files
-
-### Example Output
-
-```
-Detected Expression: Happy
-Recommended Songs: "Happy" by Pharrell Williams, "Good Vibrations" by The Beach Boys
-```
-
-## 🔧 Environment Variables
-
-Create a `.env` file in the `backend` directory with the following structure:
-
-```env
-# Database
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/database
-
-# Authentication
-JWT_SECRET=your_jwt_secret_key_here
-
-# Redis Cache
-REDIS_HOST=redis_host_address
-REDIS_PORT=6379
-REDIS_PASSWORD=your_redis_password
-
-# File Storage (ImageKit)
-IMAGEKIT_PRIVATE_KEY=private_your_imagekit_key
-```
-
-## 📡 API Documentation
-
-### Authentication Endpoints
-
-#### `POST /api/auth/register`
-
-Register a new user.
-
-**Request Body:**
-
-```json
-{
-  "username": "john_doe",
-  "email": "john@example.com",
-  "password": "securepassword123"
-}
-```
-
-**Response:**
-
-```json
-{
-  "message": "User registered successfully",
-  "user": {
-    "id": "user_id",
-    "username": "john_doe",
-    "email": "john@example.com"
-  }
-}
-```
-
-#### `POST /api/auth/login`
-
-Authenticate user and get JWT token.
-
-**Request Body:**
-
-```json
-{
-  "email": "john@example.com",
-  "password": "securepassword123"
-}
-```
-
-**Response:**
-
-```json
-{
-  "token": "jwt_token_here",
-  "user": {
-    "id": "user_id",
-    "username": "john_doe",
-    "email": "john@example.com"
-  }
-}
-```
-
-### Song Endpoints
-
-#### `GET /api/songs?mood=happy`
-
-Get songs based on mood.
-
-**Response:**
-
-```json
-{
-  "songs": [
-    {
-      "_id": "song_id",
-      "title": "Happy Song",
-      "artist": "Artist Name",
-      "mood": "happy",
-      "url": "https://ik.imagekit.io/.../song.mp3",
-      "duration": 180
-    }
-  ]
-}
-```
-
-#### `POST /api/songs/upload`
-
-Upload a new song (requires authentication).
-
-**Headers:**
-
-```
-Authorization: Bearer <jwt_token>
-Content-Type: multipart/form-data
-```
-
-**Form Data:**
-
-- `file`: MP3 audio file
-- `title`: Song title
-- `artist`: Artist name
-- `mood`: Primary mood (happy, sad, calm, energetic)
-
-## 🤝 Contributing
-
-We welcome contributions to Moodify! Here's how you can help:
-
-### Development Process
-
-1. **Fork the repository**
-2. **Create a feature branch**
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
-3. **Commit your changes**
-   ```bash
-   git commit -m 'Add some amazing feature'
-   ```
-4. **Push to the branch**
-   ```bash
-   git push origin feature/amazing-feature
-   ```
-5. **Open a Pull Request**
-
-### Coding Standards
-
-- Follow existing code style and conventions
-- Write meaningful commit messages
-- Add comments for complex logic
-- Update documentation when changing features
-
-### Areas for Contribution
-
-- Improve facial expression detection accuracy
-- Add more music streaming platform integrations
-- Enhance UI/UX design
-- Write comprehensive tests
-- Add TypeScript support
-- Implement offline functionality
-
-## 👤 Author
-
-**Tejas** - Full Stack Developer
-
-## 🙏 Acknowledgments
-
-- **Google MediaPipe** for facial landmark detection technology
-- **ImageKit** for media storage and CDN services
-- **MongoDB Atlas** for cloud database hosting
-- **Redis Labs** for Redis cloud hosting
-- **React & Vite** communities for excellent documentation
-
-### Roadmap
-
-- [ ] Add support for multiple music streaming services (Spotify, YouTube Music)
-- [ ] Implement machine learning for improved mood classification
-- [ ] Add social features (share playlists, follow users)
-- [ ] Develop mobile applications (React Native)
-- [ ] Implement voice command support
-- [ ] Add advanced audio analysis (BPM, key detection)
 
 ---
 
-<div align="center">
-  <p>Made with ❤️ and 🎵 by the Moodify team</p>
-  <p>If you enjoy this project, please give it a ⭐ on GitHub!</p>
-</div>
+## 🚀 Getting Started
+
+### Prerequisites
+- **Node.js**: v18.0.0 or higher
+- **MongoDB**: Local instance or MongoDB Atlas cluster URI
+- **Redis**: Local instance or Redis Cloud instance
+
+### 1. Clone Repository
+```bash
+git clone https://github.com/your-username/Moodify.git
+cd Moodify
+```
+
+### 2. Backend Setup
+```bash
+cd backend
+npm install
+cp .env.example .env
+# Edit .env with your credentials
+npm run dev
+```
+
+### 3. Frontend Setup
+```bash
+cd ../frontend
+npm install
+cp .env.example .env
+# Edit .env if backend runs on a custom port
+npm run dev
+```
+
+Visit **`http://localhost:5173`** in your browser to experience Moodify.
+
+---
+
+## 🔐 Environment Configuration
+
+### Backend (`backend/.env`)
+| Variable | Description | Example |
+|---|---|---|
+| `PORT` | Server listening port | `3000` |
+| `MONGO_URI` | MongoDB Connection String | `mongodb+srv://...` |
+| `JWT_SECRET` | Secret key for signing JWTs | `random_32_character_string` |
+| `REDIS_HOST` | Redis endpoint | `redis-12345.example.com` |
+| `REDIS_PORT` | Redis port | `19186` |
+| `REDIS_PASSWORD` | Redis password | `your_password` |
+| `IMAGEKIT_PRIVATE_KEY` | ImageKit private key for uploads | `private_...` |
+| `FRONTEND_URL` | Allowed client origin for CORS | `http://localhost:5173` |
+
+### Frontend (`frontend/.env`)
+| Variable | Description | Example |
+|---|---|---|
+| `VITE_BACKEND_URL` | Base URL of the Moodify backend API | `http://localhost:3000` |
+
+---
+
+## 📡 API Endpoints
+
+### 🔐 Authentication (`/api/auth`)
+- `POST /api/auth/register`: Create a new user account & set session cookie.
+- `POST /api/auth/login`: Authenticate existing user credentials.
+- `GET /api/auth/get-me`: Retrieve active session profile.
+- `PATCH /api/auth/theme`: Persist user theme preference (`light` / `dark`).
+- `POST /api/auth/logout`: Invalidate session token in Redis & clear cookie.
+
+### 🎼 Soundtracks (`/api/songs`)
+- `GET /api/songs`: Retrieve mood-curated tracks (`?mood=happy&single=false`).
+- `POST /api/songs`: Upload audio file (`multipart/form-data`) with ID3 tags.
+- `DELETE /api/songs/:id`: Remove track from database.
+
+---
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).

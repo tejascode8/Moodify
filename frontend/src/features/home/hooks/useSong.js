@@ -1,19 +1,70 @@
-import { getSong } from "../service/song.api";
 import { useContext } from "react";
 import SongContext from "../service/SongContext";
 
 export const useSong = () => {
   const context = useContext(SongContext);
 
-  const { loading, setLoading, song, setSong } = context;
-
-  async function handleGetSong({ mood }) {
-    setLoading(true);
-    const data = await getSong({ mood });
-
-    setSong(data.song);
-    setLoading(false);
+  if (!context) {
+    throw new Error("useSong must be used within a SongContextProvider");
   }
 
-  return { loading, song, handleGetSong };
+  const {
+    song,
+    setSong,
+    playlist,
+    setPlaylist,
+    currentIndex,
+    setCurrentIndex,
+    currentMood,
+    setCurrentMood,
+    changeMood,
+    isPlaying,
+    setIsPlaying,
+    loading,
+    setLoading,
+    repeatMode,
+    setRepeatMode,
+    isShuffle,
+    setIsShuffle,
+    likedSongs,
+    toggleLike,
+    isLiked,
+    playSong,
+    playNext,
+    playPrev,
+    deleteTrack,
+  } = context;
+
+  const handleGetSong = async ({ mood, autoPlay = true }) => {
+    await changeMood(mood, autoPlay);
+  };
+
+  return {
+    song,
+    setSong,
+    playlist,
+    setPlaylist,
+    currentIndex,
+    setCurrentIndex,
+    currentMood,
+    setCurrentMood,
+    changeMood,
+    isPlaying,
+    setIsPlaying,
+    loading,
+    setLoading,
+    repeatMode,
+    setRepeatMode,
+    isShuffle,
+    setIsShuffle,
+    likedSongs,
+    toggleLike,
+    isLiked,
+    playSong,
+    playNext,
+    playPrev,
+    deleteTrack,
+    handleGetSong,
+  };
 };
+
