@@ -50,16 +50,15 @@ app.get("/health", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/songs", songRoutes);
 
-// If frontend build exists (e.g., monolith deployment), serve static assets
-const localDistPath = path.join(__dirname, "../../frontend/dist");
-const rootDistPath = path.join(__dirname, "../../../frontend/dist");
+// If frontend build exists (e.g., monolith fullstack deployment), serve static assets
+const possibleDistPaths = [
+  path.join(__dirname, "../../frontend/dist"),
+  path.join(process.cwd(), "frontend/dist"),
+  path.join(process.cwd(), "../frontend/dist"),
+  path.join(__dirname, "../../../frontend/dist"),
+];
 
-let distPath = null;
-if (fs.existsSync(localDistPath)) {
-  distPath = localDistPath;
-} else if (fs.existsSync(rootDistPath)) {
-  distPath = rootDistPath;
-}
+const distPath = possibleDistPaths.find((p) => fs.existsSync(p)) || null;
 
 if (distPath) {
   app.use(express.static(distPath));
